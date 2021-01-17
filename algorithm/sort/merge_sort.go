@@ -25,23 +25,27 @@ func merge_sort_merge(leftSlice, rightSlice []int) []int {
 	leftCurrent := 0
 	rightCurrent := 0
 
-	result := make([]int, 0)
+	result := make([]int, leftNum+rightNum)
+	i := 0
 	for leftCurrent < leftNum && rightCurrent < rightNum {
 		if leftSlice[leftCurrent] <= rightSlice[rightCurrent] {
-			result = append(result, leftSlice[leftCurrent])
+			result[i] = leftSlice[leftCurrent]
 			leftCurrent++
 		} else {
-			result = append(result, rightSlice[rightCurrent])
+			result[i] = rightSlice[rightCurrent]
 			rightCurrent++
 		}
+		i++
 	}
 	for leftCurrent < leftNum {
-		result = append(result, leftSlice[leftCurrent])
+		result[i] = leftSlice[leftCurrent]
 		leftCurrent++
+		i++
 	}
 	for rightCurrent < rightNum {
-		result = append(result, rightSlice[rightCurrent])
+		result[i] = rightSlice[rightCurrent]
 		rightCurrent++
+		i++
 	}
 	return result
 }

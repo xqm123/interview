@@ -18,12 +18,20 @@ func quick_sort_c(slice []int, left, right int) {
 //quick_sort_partition 分区函数 这是提升效率的核心
 func quick_sort_partition(slice []int, left, right int) int {
 
+	if right-left == 1 {
+		if slice[right] < slice[left] {
+			slice[left], slice[right] = slice[right], slice[left]
+		}
+		return left
+	}
+
 	var re int
 	var q int
 	var mins []int
 	var maxs []int
+	var pivot int
 	for i := right; i >= left; i-- {
-		pivot := slice[i] //简单点 这里分区点从后往前取 直到合格为止
+		pivot = slice[i] //简单点 这里分区点从后往前取 直到合格为止
 		mins = make([]int, 0)
 		maxs = make([]int, 0)
 		for j := left; j <= right; j++ {

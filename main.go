@@ -4,6 +4,7 @@ import (
 	"fmt"
 	mysort "interview/algorithm/sort"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -15,7 +16,7 @@ func main() {
 	n := 100000
 	slice := make([]int, n)
 	for i := 0; i < n; i++ {
-		slice[i] = rand.Int()
+		slice[i] = rand.Intn(1000000000)
 	}
 
 	var t1 int64
@@ -61,4 +62,15 @@ func main() {
 	t2 = time.Now().UnixNano() / 1e6
 	//fmt.Println(a)
 	fmt.Printf("SelectionSort spendtime: %vms\n", t2-t1)
+
+	//基数排序
+	radix_a := make([]string, len(slice))
+	for k, v := range slice {
+		radix_a[k] = strconv.Itoa(v)
+	}
+	t1 = time.Now().UnixNano() / 1e6
+	mysort.RadixSort(radix_a)
+	t2 = time.Now().UnixNano() / 1e6
+	//fmt.Println(a)
+	fmt.Printf("RadixSort spendtime: %vms\n", t2-t1)
 }

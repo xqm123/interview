@@ -12,7 +12,7 @@ func main() {
 	//slice := []string{"abs1", "13870669286", "13845761209", "", "13209181203", "1392309", "13870659302"}
 
 	rand.Seed(time.Now().UnixNano())
-	n := 10
+	n := 100000
 	slice := make([]int, n)
 	for i := 0; i < n; i++ {
 		slice[i] = rand.Int()
@@ -27,7 +27,7 @@ func main() {
 	t1 = time.Now().UnixNano() / 1e6
 	mysort.QuickSort(a)
 	t2 = time.Now().UnixNano() / 1e6
-	fmt.Println(a)
+	//fmt.Println(a)
 	fmt.Printf("QuickSort spendtime: %vms\n", t2-t1)
 
 	//归并排序
@@ -35,7 +35,7 @@ func main() {
 	t1 = time.Now().UnixNano() / 1e6
 	mysort.MergeSort(a)
 	t2 = time.Now().UnixNano() / 1e6
-	fmt.Println(a)
+	//fmt.Println(a)
 	fmt.Printf("MergeSort spendtime: %vms\n", t2-t1)
 
 	//冒泡排序

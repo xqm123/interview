@@ -9,7 +9,7 @@ type heap struct {
 
 func NewHeap(n uint64) *heap {
 	return &heap{
-		data: make([]int64, n),
+		data: make([]int64, n+1),
 		n:    n,
 	}
 }

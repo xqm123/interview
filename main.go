@@ -2,37 +2,45 @@ package main
 
 import (
 	"fmt"
-	mySearch "interview/algorithm/search"
+	"interview/data_structure/heap"
+	"math/rand"
+	"os"
 	"time"
 )
 
 func main() {
-	//slice := []int{1, 10, -2, 21, 2, 30, -29, 83, 2, -10, -3, 67, 188, 23, -1, -1, 230, 121, -140, 52, 51, 43, 67, -1, 234, -187, 23}
-	//slice := []string{"abs1", "13870669286", "13845761209", "", "13209181203", "1392309", "13870659302"}
 
-	n := 20000001
-	slice := make([]int, n)
+	rand.Seed(time.Now().UnixNano())
+	var o int
+	n := 100
+	maxHeap := heap.NewMaxHeap(uint64(n))
+
+	slice := make([]int64, n)
 	for i := 0; i < n; i++ {
-		slice[i] = i - 100000000
+		slice[i] = int64(rand.Intn(1000) - 500)
+		// if o = maxHeap.AddElement(int64(rand.Intn(100) - 50)); o != 1 {
+		// 	fmt.Printf("AddElement err return: %d\n", o)
+		// 	os.Exit(2)
+		// }
 	}
 
-	var t1 int64
-	var t2 int64
+	fmt.Println(slice)
 
-	//二分查找
-	//copy(a, slice)
-	t1 = time.Now().UnixNano() / 1e6
-	index := mySearch.BinarySearchV1(slice, 100000000)
-	t2 = time.Now().UnixNano() / 1e6
-	//fmt.Println(a)
-	fmt.Printf("BinarySearchV1 search result: %d  spendtime: %vms\n", index, t2-t1)
+	if o = maxHeap.BuildHeapFromData(slice); o != 1 {
+		fmt.Printf("BuildHeapFromData err return: %d\n", o)
+		os.Exit(2)
+	}
 
-	//遍历查找
-	a := make([]int, n)
-	copy(a, slice)
-	t1 = time.Now().UnixNano() / 1e6
-	index = mySearch.Sample(a, 100000000)
-	t2 = time.Now().UnixNano() / 1e6
-	//fmt.Println(a)
-	fmt.Printf("Sample search result: %d  spendtime: %vms\n", index, t2-t1)
+	fmt.Println(maxHeap.GetData())
+	fmt.Println(maxHeap.GetCap())
+	fmt.Println(maxHeap.GetLen())
+	if o = maxHeap.Sort(); o != 1 {
+		fmt.Printf("Sort err return: %d\n", o)
+		os.Exit(2)
+	}
+
+	fmt.Println(maxHeap.GetData())
+	fmt.Println(maxHeap.GetCap())
+	fmt.Println(maxHeap.GetLen())
+
 }

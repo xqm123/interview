@@ -1,20 +1,20 @@
 package heap
 
-//最大堆实现
-type maxHeap struct {
+//最小堆实现
+type minHeap struct {
 	data  []int64 //数据
 	n     uint64  //容量
 	count uint64  //当前数据量
 }
 
-func NewMaxHeap(n uint64) *maxHeap {
-	return &maxHeap{
+func NewMinHeap(n uint64) *minHeap {
+	return &minHeap{
 		data: make([]int64, n+1),
 		n:    n,
 	}
 }
 
-func (h *maxHeap) AddElement(data int64) int {
+func (h *minHeap) AddElement(data int64) int {
 	if h.count >= h.n {
 		return -1
 	}
@@ -24,7 +24,7 @@ func (h *maxHeap) AddElement(data int64) int {
 
 	i := h.count
 	p := i / 2
-	for p > 0 && h.data[i] > h.data[p] {
+	for p > 0 && h.data[i] < h.data[p] {
 		h.data[i], h.data[p] = h.data[p], h.data[i]
 		i = p
 		p = i / 2
@@ -33,7 +33,7 @@ func (h *maxHeap) AddElement(data int64) int {
 	return 1
 }
 
-func (h *maxHeap) DelElement(index uint64) int {
+func (h *minHeap) DelElement(index uint64) int {
 	if index == 0 || h.count == 0 || index > h.count {
 		return -1
 	}
@@ -44,7 +44,7 @@ func (h *maxHeap) DelElement(index uint64) int {
 	return h.top_build_heap(index)
 }
 
-func (h *maxHeap) RefBuildHeap() int {
+func (h *minHeap) RefBuildHeap() int {
 
 	for i := (h.count / 2); i >= 1; i-- {
 		if o := h.top_build_heap(i); o == -1 {
@@ -55,7 +55,7 @@ func (h *maxHeap) RefBuildHeap() int {
 	return 1
 }
 
-func (h *maxHeap) BuildHeapFromData(data []int64) int {
+func (h *minHeap) BuildHeapFromData(data []int64) int {
 	if len(data) == 0 {
 		return -1
 	}
@@ -74,15 +74,11 @@ func (h *maxHeap) BuildHeapFromData(data []int64) int {
 	return 1
 }
 
-func (h *maxHeap) Sort() int {
+func (h *minHeap) Sort() int {
 	if h.count <= 1 {
 		return 1
 	}
 	count := h.count
-	defer func() {
-		h.count = count
-	}()
-
 	for i := count; i >= 2; i-- {
 		min := h.data[1]
 		h.data[1] = h.data[i]
@@ -93,48 +89,50 @@ func (h *maxHeap) Sort() int {
 		}
 	}
 
+	h.count = count
+
 	return 1
 }
 
-func (h *maxHeap) GetData() []int64 {
+func (h *minHeap) GetData() []int64 {
 	if h.data != nil {
 		return h.data[1:]
 	}
 	return []int64{}
 }
 
-func (h *maxHeap) GetCap() uint64 {
+func (h *minHeap) GetCap() uint64 {
 	return h.n
 }
 
-func (h *maxHeap) GetLen() uint64 {
+func (h *minHeap) GetLen() uint64 {
 	return h.count
 }
 
-func (h *maxHeap) top_build_heap(index uint64) int {
+func (h *minHeap) top_build_heap(index uint64) int {
 	if index == 0 || h.count == 0 || index > h.count {
 		return -1
 	}
 
 	i := index
-	maxPos := index
+	minPos := index
 
 	var n uint64
 	for {
 		n = i * 2
-		if n <= h.count && h.data[n] > h.data[i] {
-			maxPos = n
+		if n <= h.count && h.data[n] < h.data[i] {
+			minPos = n
 		}
-		if (n+1) <= h.count && h.data[n+1] > h.data[maxPos] {
-			maxPos = n + 1
+		if (n+1) <= h.count && h.data[n+1] < h.data[minPos] {
+			minPos = n + 1
 		}
 
-		if i == maxPos {
+		if i == minPos {
 			break
 		}
-		h.data[i], h.data[maxPos] = h.data[maxPos], h.data[i]
+		h.data[i], h.data[minPos] = h.data[minPos], h.data[i]
 
-		i = maxPos
+		i = minPos
 	}
 
 	return 1

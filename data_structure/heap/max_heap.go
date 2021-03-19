@@ -14,6 +14,7 @@ func NewMaxHeap(n uint64) *maxHeap {
 	}
 }
 
+//往堆添加元素，每一次添加需从下往上堆化 O(log(n))
 func (h *maxHeap) AddElement(data int64) int {
 	if h.count >= h.n {
 		return -1
@@ -33,6 +34,7 @@ func (h *maxHeap) AddElement(data int64) int {
 	return 1
 }
 
+//删除元素 O(log(n))
 func (h *maxHeap) DelElement(index uint64) int {
 	if index == 0 || h.count == 0 || index > h.count {
 		return -1
@@ -44,6 +46,7 @@ func (h *maxHeap) DelElement(index uint64) int {
 	return h.top_build_heap(index)
 }
 
+//重新建堆 O(n)
 func (h *maxHeap) RefBuildHeap() int {
 
 	for i := (h.count / 2); i >= 1; i-- {
@@ -55,6 +58,7 @@ func (h *maxHeap) RefBuildHeap() int {
 	return 1
 }
 
+//按照来源数据建堆 O(n)
 func (h *maxHeap) BuildHeapFromData(data []int64) int {
 	if len(data) == 0 {
 		return -1
@@ -74,6 +78,7 @@ func (h *maxHeap) BuildHeapFromData(data []int64) int {
 	return 1
 }
 
+//最大堆 从小到大排序 O(nlog(n))
 func (h *maxHeap) Sort() int {
 	if h.count <= 1 {
 		return 1

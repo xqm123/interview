@@ -2,45 +2,35 @@ package main
 
 import (
 	"fmt"
-	"interview/data_structure/heap"
+	"interview/algorithm/sort"
 	"math/rand"
-	"os"
 	"time"
 )
 
 func main() {
 
 	rand.Seed(time.Now().UnixNano())
-	var o int
-	n := 100
-	maxHeap := heap.NewMaxHeap(uint64(n))
+	n := 1000000
 
-	slice := make([]int64, n)
+	slice := make([]int, n)
+	slice2 := make([]int, n)
 	for i := 0; i < n; i++ {
-		slice[i] = int64(rand.Intn(1000) - 500)
-		// if o = maxHeap.AddElement(int64(rand.Intn(100) - 50)); o != 1 {
-		// 	fmt.Printf("AddElement err return: %d\n", o)
-		// 	os.Exit(2)
-		// }
+		slice[i] = rand.Intn(n)-n/2
+		slice2[i] = slice[i]
 	}
 
-	fmt.Println(slice)
+	//fmt.Println(slice)
 
-	if o = maxHeap.BuildHeapFromData(slice); o != 1 {
-		fmt.Printf("BuildHeapFromData err return: %d\n", o)
-		os.Exit(2)
-	}
+	t1 := time.Now().UnixNano()/1e6
+	sort.QuickSort(slice)
+	t2 := time.Now().UnixNano()/1e6
+	//fmt.Println(slice)
+	fmt.Printf("QuickSort spend time: %d \n", t2-t1)
 
-	fmt.Println(maxHeap.GetData())
-	fmt.Println(maxHeap.GetCap())
-	fmt.Println(maxHeap.GetLen())
-	if o = maxHeap.Sort(); o != 1 {
-		fmt.Printf("Sort err return: %d\n", o)
-		os.Exit(2)
-	}
-
-	fmt.Println(maxHeap.GetData())
-	fmt.Println(maxHeap.GetCap())
-	fmt.Println(maxHeap.GetLen())
+	t1 = time.Now().UnixNano()/1e6
+	sort.MergeSort(slice)
+	t2 = time.Now().UnixNano()/1e6
+	//fmt.Println(slice)
+	fmt.Printf("MergeSort spend time: %d \n", t2-t1)
 
 }

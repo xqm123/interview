@@ -11,59 +11,25 @@ func quick_sort_c(slice []int, left, right int) {
 		return
 	}
 	q := quick_sort_partition(slice, left, right)
-	quick_sort_c(slice, left, q)
+	quick_sort_c(slice, left, q-1)
 	quick_sort_c(slice, q+1, right)
 }
 
 //quick_sort_partition 分区函数 这是提升效率的核心
 func quick_sort_partition(slice []int, left, right int) int {
 
-	if right-left == 1 {
-		if slice[right] < slice[left] {
-			slice[left], slice[right] = slice[right], slice[left]
+	i := left
+	point := slice[right] //选择最后一个为分区点
+
+	//原地分区巧妙实现  类似于选择排序的已排序区和未排序区
+	for j := left; j < right; j++ {
+		if slice[j] < point {
+			slice[i], slice[j] = slice[j], slice[i]
+			i++
 		}
-		return left
 	}
 
-	var re int
-	var q int
-	var mins []int
-	var maxs []int
-	var pivot int
-	for i := right; i >= left; i-- {
-		pivot = slice[i] //简单点 这里分区点从后往前取 直到合格为止
-		mins = make([]int, 0)
-		maxs = make([]int, 0)
-		for j := left; j <= right; j++ {
-			if slice[j] <= pivot {
-				mins = append(mins, slice[j])
-			} else {
-				maxs = append(maxs, slice[j])
-			}
-		}
+	slice[i], slice[right] = slice[right], slice[i]
 
-		q = left + len(mins)
-		re = q - 1
-		if re == left || re == right {
-			//这是不合格的分区点
-			continue
-		}
-
-		//走到这说明这是合格的
-		break
-
-	}
-
-	if re == left || re == right {
-		//走到这都没有合格的 只能说明任意取一个都可以
-		re = left + (right-left)>>1
-	}
-
-	for k, v := range mins {
-		slice[left+k] = v
-	}
-	for k, v := range maxs {
-		slice[q+k] = v
-	}
-	return re
+	return i
 }

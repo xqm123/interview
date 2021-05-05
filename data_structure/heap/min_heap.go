@@ -81,6 +81,10 @@ func (h *minHeap) Sort() error {
 		return nil
 	}
 	count := h.count
+	defer func() {
+		h.count = count
+	}()
+
 	for i := count; i >= 2; i-- {
 		min := h.data[1]
 		h.data[1] = h.data[i]
@@ -90,8 +94,6 @@ func (h *minHeap) Sort() error {
 			return err
 		}
 	}
-
-	h.count = count
 
 	return nil
 }

@@ -10,7 +10,7 @@ import (
 func main() {
 
 	rand.Seed(time.Now().UnixNano())
-	n := 1000000
+	n := 100000
 
 	slice := make([]int, n)
 	slice2 := make([]int, n)
@@ -25,12 +25,12 @@ func main() {
 	sort.QuickSort(slice)
 	t2 := time.Now().UnixNano() / 1e6
 	//fmt.Println(slice)
-	fmt.Printf("QuickSort spend time: %d \n", t2-t1)
+	fmt.Printf("QuickSort spend time: %dms\n", t2-t1)
 
 	t1 = time.Now().UnixNano() / 1e6
 	sort.MergeSort(slice)
 	t2 = time.Now().UnixNano() / 1e6
 	//fmt.Println(slice)
-	fmt.Printf("MergeSort spend time: %d \n", t2-t1)
+	fmt.Printf("MergeSort spend time: %dms\n", t2-t1)
 
 }

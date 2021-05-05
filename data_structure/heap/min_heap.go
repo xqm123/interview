@@ -1,5 +1,7 @@
 package heap
 
+import "errors"
+
 //最小堆实现
 type minHeap struct {
 	data  []int64 //数据
@@ -14,9 +16,9 @@ func NewMinHeap(n uint64) *minHeap {
 	}
 }
 
-func (h *minHeap) AddElement(data int64) int {
+func (h *minHeap) AddElement(data int64) error {
 	if h.count >= h.n {
-		return -1
+		return errors.New("count to reach maximum")
 	}
 
 	h.data[h.count+1] = data
@@ -30,12 +32,12 @@ func (h *minHeap) AddElement(data int64) int {
 		p = i / 2
 	}
 
-	return 1
+	return nil
 }
 
-func (h *minHeap) DelElement(index uint64) int {
+func (h *minHeap) DelElement(index uint64) error {
 	if index == 0 || h.count == 0 || index > h.count {
-		return -1
+		return errors.New("index error")
 	}
 
 	h.data[index] = h.data[h.count]
@@ -44,39 +46,39 @@ func (h *minHeap) DelElement(index uint64) int {
 	return h.top_build_heap(index)
 }
 
-func (h *minHeap) RefBuildHeap() int {
+func (h *minHeap) RefBuildHeap() error {
 
 	for i := (h.count / 2); i >= 1; i-- {
-		if o := h.top_build_heap(i); o == -1 {
-			return -1
+		if err := h.top_build_heap(i); err != nil {
+			return err
 		}
 	}
 
-	return 1
+	return nil
 }
 
-func (h *minHeap) BuildHeapFromData(data []int64) int {
+func (h *minHeap) BuildHeapFromData(data []int64) error {
 	if len(data) == 0 {
-		return -1
+		return errors.New("data is empty")
 	}
 
 	if h.n < uint64(len(data)) {
-		return -1
+		return errors.New("data len over the storable size")
 	}
 	//第一个元素不设置值
 	copy(h.data[1:], data)
 	h.count = uint64(len(data))
 
-	if o := h.RefBuildHeap(); o == -1 {
-		return -1
+	if err := h.RefBuildHeap(); err != nil {
+		return err
 	}
 
-	return 1
+	return nil
 }
 
-func (h *minHeap) Sort() int {
+func (h *minHeap) Sort() error {
 	if h.count <= 1 {
-		return 1
+		return nil
 	}
 	count := h.count
 	for i := count; i >= 2; i-- {
@@ -84,14 +86,14 @@ func (h *minHeap) Sort() int {
 		h.data[1] = h.data[i]
 		h.data[i] = min
 		h.count--
-		if o := h.top_build_heap(1); o == -1 {
-			return -1
+		if err := h.top_build_heap(1); err != nil {
+			return err
 		}
 	}
 
 	h.count = count
 
-	return 1
+	return nil
 }
 
 func (h *minHeap) GetData() []int64 {
@@ -99,6 +101,13 @@ func (h *minHeap) GetData() []int64 {
 		return h.data[1:]
 	}
 	return []int64{}
+}
+
+func (h *minHeap) GetTopValue() (int64, error) {
+	if h.GetLen() < 1 {
+		return 0, errors.New("data len is lt 1")
+	}
+	return h.data[1], nil
 }
 
 func (h *minHeap) GetCap() uint64 {
@@ -109,9 +118,9 @@ func (h *minHeap) GetLen() uint64 {
 	return h.count
 }
 
-func (h *minHeap) top_build_heap(index uint64) int {
+func (h *minHeap) top_build_heap(index uint64) error {
 	if index == 0 || h.count == 0 || index > h.count {
-		return -1
+		return errors.New("index error")
 	}
 
 	i := index
@@ -135,5 +144,5 @@ func (h *minHeap) top_build_heap(index uint64) int {
 		i = minPos
 	}
 
-	return 1
+	return nil
 }

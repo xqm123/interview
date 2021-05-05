@@ -1,5 +1,7 @@
 package heap
 
+import "errors"
+
 //最大堆实现
 type maxHeap struct {
 	data  []int64 //数据
@@ -15,9 +17,9 @@ func NewMaxHeap(n uint64) *maxHeap {
 }
 
 //往堆添加元素，每一次添加需从下往上堆化 O(log(n))
-func (h *maxHeap) AddElement(data int64) int {
+func (h *maxHeap) AddElement(data int64) error {
 	if h.count >= h.n {
-		return -1
+		return errors.New("count to reach maximum")
 	}
 
 	h.data[h.count+1] = data
@@ -31,13 +33,13 @@ func (h *maxHeap) AddElement(data int64) int {
 		p = i / 2
 	}
 
-	return 1
+	return nil
 }
 
 //删除元素 O(log(n))
-func (h *maxHeap) DelElement(index uint64) int {
+func (h *maxHeap) DelElement(index uint64) error {
 	if index == 0 || h.count == 0 || index > h.count {
-		return -1
+		return errors.New("index error")
 	}
 
 	h.data[index] = h.data[h.count]
@@ -47,41 +49,41 @@ func (h *maxHeap) DelElement(index uint64) int {
 }
 
 //重新建堆 O(n)
-func (h *maxHeap) RefBuildHeap() int {
+func (h *maxHeap) RefBuildHeap() error {
 
 	for i := (h.count / 2); i >= 1; i-- {
-		if o := h.top_build_heap(i); o == -1 {
-			return -1
+		if err := h.top_build_heap(i); err != nil {
+			return err
 		}
 	}
 
-	return 1
+	return nil
 }
 
 //按照来源数据建堆 O(n)
-func (h *maxHeap) BuildHeapFromData(data []int64) int {
+func (h *maxHeap) BuildHeapFromData(data []int64) error {
 	if len(data) == 0 {
-		return -1
+		return errors.New("data is empty")
 	}
 
 	if h.n < uint64(len(data)) {
-		return -1
+		return errors.New("data len over the storable size")
 	}
 	//第一个元素不设置值
 	copy(h.data[1:], data)
 	h.count = uint64(len(data))
 
-	if o := h.RefBuildHeap(); o == -1 {
-		return -1
+	if err := h.RefBuildHeap(); err != nil {
+		return err
 	}
 
-	return 1
+	return nil
 }
 
 //最大堆 从小到大排序 O(nlog(n))
-func (h *maxHeap) Sort() int {
+func (h *maxHeap) Sort() error {
 	if h.count <= 1 {
-		return 1
+		return nil
 	}
 	count := h.count
 	defer func() {
@@ -89,16 +91,16 @@ func (h *maxHeap) Sort() int {
 	}()
 
 	for i := count; i >= 2; i-- {
-		min := h.data[1]
+		max := h.data[1]
 		h.data[1] = h.data[i]
-		h.data[i] = min
+		h.data[i] = max
 		h.count--
-		if o := h.top_build_heap(1); o == -1 {
-			return -1
+		if err := h.top_build_heap(1); err != nil {
+			return err
 		}
 	}
 
-	return 1
+	return nil
 }
 
 func (h *maxHeap) GetData() []int64 {
@@ -106,6 +108,13 @@ func (h *maxHeap) GetData() []int64 {
 		return h.data[1:]
 	}
 	return []int64{}
+}
+
+func (h *maxHeap) GetTopValue() (int64, error) {
+	if h.GetLen() < 1 {
+		return 0, errors.New("data len is lt 1")
+	}
+	return h.data[1], nil
 }
 
 func (h *maxHeap) GetCap() uint64 {
@@ -116,9 +125,9 @@ func (h *maxHeap) GetLen() uint64 {
 	return h.count
 }
 
-func (h *maxHeap) top_build_heap(index uint64) int {
+func (h *maxHeap) top_build_heap(index uint64) error {
 	if index == 0 || h.count == 0 || index > h.count {
-		return -1
+		return errors.New("index error")
 	}
 
 	i := index
@@ -142,5 +151,5 @@ func (h *maxHeap) top_build_heap(index uint64) int {
 		i = maxPos
 	}
 
-	return 1
+	return nil
 }

@@ -9,8 +9,9 @@ import (
 
 func main() {
 
+
 	rand.Seed(time.Now().UnixNano())
-	n := 100000
+	n := 10000000
 
 	slice := make([]int, n)
 	slice2 := make([]int, n)

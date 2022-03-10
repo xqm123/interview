@@ -1,9 +1,14 @@
 package heap
 
-import "errors"
+import (
+	"errors"
+	"sync"
+)
 
 //最小堆实现
 type minHeap struct {
+	mu sync.RWMutex
+
 	data  []int64 //数据
 	n     uint64  //容量
 	count uint64  //当前数据量
@@ -11,12 +16,15 @@ type minHeap struct {
 
 func NewMinHeap(n uint64) *minHeap {
 	return &minHeap{
-		data: make([]int64, n+1),
+		data: make([]int64, n+1, n+1),
 		n:    n,
 	}
 }
 
 func (h *minHeap) AddElement(data int64) error {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+
 	if h.count >= h.n {
 		return errors.New("count to reach maximum")
 	}
@@ -36,6 +44,9 @@ func (h *minHeap) AddElement(data int64) error {
 }
 
 func (h *minHeap) DelElement(index uint64) error {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+
 	if index == 0 || h.count == 0 || index > h.count {
 		return errors.New("index error")
 	}
@@ -47,6 +58,8 @@ func (h *minHeap) DelElement(index uint64) error {
 }
 
 func (h *minHeap) RefBuildHeap() error {
+	h.mu.Lock()
+	defer h.mu.Unlock()
 
 	for i := (h.count / 2); i >= 1; i-- {
 		if err := h.top_build_heap(i); err != nil {
@@ -58,6 +71,9 @@ func (h *minHeap) RefBuildHeap() error {
 }
 
 func (h *minHeap) BuildHeapFromData(data []int64) error {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+
 	if len(data) == 0 {
 		return errors.New("data is empty")
 	}
@@ -69,14 +85,19 @@ func (h *minHeap) BuildHeapFromData(data []int64) error {
 	copy(h.data[1:], data)
 	h.count = uint64(len(data))
 
-	if err := h.RefBuildHeap(); err != nil {
-		return err
+	for i := (h.count / 2); i >= 1; i-- {
+		if err := h.top_build_heap(i); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
 func (h *minHeap) Sort() error {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+
 	if h.count <= 1 {
 		return nil
 	}
@@ -99,6 +120,9 @@ func (h *minHeap) Sort() error {
 }
 
 func (h *minHeap) GetData() []int64 {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+
 	if h.data != nil {
 		return h.data[1:]
 	}
@@ -106,6 +130,9 @@ func (h *minHeap) GetData() []int64 {
 }
 
 func (h *minHeap) GetTopValue() (int64, error) {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+
 	if h.GetLen() < 1 {
 		return 0, errors.New("data len is lt 1")
 	}
@@ -113,10 +140,16 @@ func (h *minHeap) GetTopValue() (int64, error) {
 }
 
 func (h *minHeap) GetCap() uint64 {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+
 	return h.n
 }
 
 func (h *minHeap) GetLen() uint64 {
+	h.mu.RLock()
+	defer h.mu.RUnlock()
+
 	return h.count
 }
 

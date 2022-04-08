@@ -181,3 +181,8 @@ func (h *minHeap) top_build_heap(index uint64) error {
 
 	return nil
 }
+
+func (h *minHeap) ReplaceTopValue(val int64) error {
+	h.data[1] = val
+	return h.top_build_heap(1)
+}
